@@ -1,0 +1,5 @@
+C:\Users\swalther\Documents\TutorialsPlus\0 ASP.NET MVC Overview\0 Creating a Movie Database Application\CS\MovieApp\MovieApp\bin\MovieApp.dll
+C:\Users\swalther\Documents\TutorialsPlus\0 ASP.NET MVC Overview\0 Creating a Movie Database Application\CS\MovieApp\MovieApp\bin\MovieApp.pdb
+C:\Users\swalther\Documents\TutorialsPlus\0 ASP.NET MVC Overview\0 Creating a Movie Database Application\CS\MovieApp\MovieApp\obj\Debug\ResolveAssemblyReference.cache
+C:\Users\swalther\Documents\TutorialsPlus\0 ASP.NET MVC Overview\0 Creating a Movie Database Application\CS\MovieApp\MovieApp\obj\Debug\MovieApp.dll
+C:\Users\swalther\Documents\TutorialsPlus\0 ASP.NET MVC Overview\0 Creating a Movie Database Application\CS\MovieApp\MovieApp\obj\Debug\MovieApp.pdb
