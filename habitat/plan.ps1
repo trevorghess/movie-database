@@ -7,7 +7,7 @@ $pkg_source="http://download.microsoft.com/download/7/2/8/728F8794-E59A-4D18-9A5
 # $pkg_filename="$pkg_name-$pkg_version.zip"
 $pkg_shasum="93bb6654357446cd443d75562949ad62194bac07a589b22cd95f2223292c61d0"
 # $pkg_deps=@()
-$pkg_build_deps=@("core/visual-build-tools-2017")
+$pkg_build_deps=@("core/visual-build-tools-2017", "core/dsc-core")
 # $pkg_lib_dirs=@("lib")
 # $pkg_include_dirs=@("include")
 # $pkg_bin_dirs=@("bin")
@@ -41,8 +41,9 @@ function Invoke-Verify{
 function Invoke-Build{
     cp -r $PLAN_CONTEXT/.. $HAB_CACHE_SRC_PATH/$pkg_dirname
     cd ${HAB_CACHE_SRC_PATH}/${pkg_dirname}
-
-    Add-WindowsFeature NET-Framework-Core
+    
+    Import-Module "$(Get-HabPackagePath dsc-core)/Modules/DscCore"
+    Start-DscCore $PLAN_CONTEXT\config\enable-net35.ps1 EnableNet35
     
     MSBuild.exe $HAB_CACHE_SRC_PATH\$pkg_dirname\src\MovieApp\MovieApp\MovieApp.csproj
 }
