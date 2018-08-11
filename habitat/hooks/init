@@ -1,0 +1,5 @@
+Set-Location {{pkg.svc_path}}
+if(Test-Path www) { Remove-Item www -Recurse -Force }
+New-Item -Name www -ItemType Junction -target "{{pkg.path}}/movie-database" | Out-Null
+cd www
+New-Item -Name Web.config -ItemType SymbolicLink -target "{{pkg.svc_config_path}}/Web.config" -Force | Out-Null

@@ -6,8 +6,8 @@ $pkg_license=@("Apache-2.0")
 $pkg_source="http://download.microsoft.com/download/7/2/8/728F8794-E59A-4D18-9A56-7AD2DB05BD9D/MovieApp_CS.zip"
 # $pkg_filename="$pkg_name-$pkg_version.zip"
 $pkg_shasum="93bb6654357446cd443d75562949ad62194bac07a589b22cd95f2223292c61d0"
-# $pkg_deps=@()
-$pkg_build_deps=@("core/visual-build-tools-2017", "core/dsc-core", 'th_demo/aspnet-mvc1')
+$pkg_deps=@("core/dsc-core")
+$pkg_build_deps=@("core/visual-build-tools-2017", "core/dsc-core", 'core/aspnet-mvc1')
 # $pkg_lib_dirs=@("lib")
 # $pkg_include_dirs=@("include")
 # $pkg_bin_dirs=@("bin")
@@ -27,17 +27,6 @@ $pkg_build_deps=@("core/visual-build-tools-2017", "core/dsc-core", 'th_demo/aspn
 # $pkg_description="Some description."
 # $pkg_upstream_url="http://example.com/project-name"
 
-# function Invoke-Download{
-#     return 0
-# }
-
-# function Invoke-Unpack{
-#     return 0
-# }
-
-# function Invoke-Verify{
-#     return 0
-# }
 function Invoke-Build{
     cp -r $PLAN_CONTEXT/.. $HAB_CACHE_SRC_PATH/$pkg_dirname
     cd ${HAB_CACHE_SRC_PATH}/${pkg_dirname}
@@ -67,5 +56,9 @@ function Invoke-Build{
 
     Write-Host $(Get-HabPackagePath aspnet-mvc1)
     
-    MSBuild.exe $csprojPath
+    MSBuild.exe $csprojPath /property:Configuration=Release
+}
+
+function Invoke-Install{
+    Copy-Item "$HAB_CACHE_SRC_PATH/$pkg_dirname/src/MovieApp/MovieApp/bin/" $pkg_prefix -recurse
 }
