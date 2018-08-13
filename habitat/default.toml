@@ -1,3 +1,4 @@
 port = 8099
 app_pool = "movie_db_pool"
 site_name = "movie_db_site"
+app_name = "movie_db_app"

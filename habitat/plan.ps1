@@ -60,5 +60,12 @@ function Invoke-Build{
 }
 
 function Invoke-Install{
-    Copy-Item "$HAB_CACHE_SRC_PATH/$pkg_dirname/src/MovieApp/MovieApp/bin/" $pkg_prefix -recurse
+    New-Item -ItemType Directory -Path $pkg_prefix/MovieApp
+    Write-Host "$HAB_CACHE_SRC_PATH/$pkg_dirname/src/MovieApp/MovieApp/bin/"
+    Copy-Item "$HAB_CACHE_SRC_PATH/$pkg_dirname/src/MovieApp/MovieApp/Scripts" "$pkg_prefix/MovieApp" -recurse
+    Copy-Item "$HAB_CACHE_SRC_PATH/$pkg_dirname/src/MovieApp/MovieApp/Content" "$pkg_prefix/MovieApp" -recurse
+    Copy-Item "$HAB_CACHE_SRC_PATH/$pkg_dirname/src/MovieApp/MovieApp/bin/" "$pkg_prefix/MovieApp" -recurse
+    Copy-Item "$HAB_CACHE_SRC_PATH/$pkg_dirname/src/MovieApp/MovieApp/Views/" "$pkg_prefix/MovieApp" -recurse
+    Copy-Item "$HAB_CACHE_SRC_PATH/$pkg_dirname/src/MovieApp/MovieApp/Default.aspx" "$pkg_prefix/MovieApp" -recurse
+    Copy-Item "$HAB_CACHE_SRC_PATH/$pkg_dirname/src/MovieApp/MovieApp/Global.asax" "$pkg_prefix/MovieApp" -recurse
 }
