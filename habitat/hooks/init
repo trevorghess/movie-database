@@ -7,6 +7,8 @@ New-Item -Name Web.config -ItemType SymbolicLink -target "{{pkg.svc_config_path}
 
 Invoke-Command -ComputerName localhost -EnableNetworkAccess {
     Set-Location {{pkg.svc_path}}/MovieApp
+    
+    Import-Module SqlServer -DisableNameChecking
 
     # Load configuration XML file.
     [xml]$config = Get-Content "{{pkg.svc_config_path}}/DatabasesConfig.xml"
@@ -16,8 +18,6 @@ Invoke-Command -ComputerName localhost -EnableNetworkAccess {
     $server = "$sqlIp\\$sqlInstance,{{bind.database.first.cfg.port}}"
     Write-Host $server
 
-   # Add-Type -Path "C:\Users\azureadmin\.nuget\packages\system.data.sqlclient\4.4.2\lib\netstandard1.2\System.Data.SqlClient.dll"
-    Add-Type -Path "C:\Users\azureadmin\.nuget\packages\microsoft.sqlserver.sqlmanagementobjects\140.17279.0\lib\net40\Microsoft.SqlServer.Smo.dll" -ReferencedAssemblies "System.Data.SqlClient.dll"
     $smo = New-Object Microsoft.SqlServer.Management.Smo.Server $server
 
     try {
