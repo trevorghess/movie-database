@@ -78,5 +78,5 @@ movie-database.default(O): movie-database is running
 
 The website should now be accessible. Browse to `http://localhost:8099/movie_db_app`. Enjoy the fine selection of films!
 
-##Thanks
+## Thanks
 Much of this readme was stolen and repurposed from https://github.com/habitat-sh/sqlwebadmin thanks Matt Wrock!
