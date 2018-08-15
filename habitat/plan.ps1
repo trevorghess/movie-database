@@ -66,4 +66,6 @@ function Invoke-Install{
     Copy-Item "$HAB_CACHE_SRC_PATH/$pkg_dirname/src/MovieApp/MovieApp/Views/" "$pkg_prefix/MovieApp" -recurse
     Copy-Item "$HAB_CACHE_SRC_PATH/$pkg_dirname/src/MovieApp/MovieApp/Default.aspx" "$pkg_prefix/MovieApp" -recurse
     Copy-Item "$HAB_CACHE_SRC_PATH/$pkg_dirname/src/MovieApp/MovieApp/Global.asax" "$pkg_prefix/MovieApp" -recurse
+    Copy-Item "$HAB_CACHE_SRC_PATH/$pkg_dirname/src/aspnetdb.mdf" "$pkg_prefix/MovieApp/App_Data" -recurse
+    Copy-Item "$HAB_CACHE_SRC_PATH/$pkg_dirname/src/aspnetdb_log.ldf" "$pkg_prefix/MovieApp/App_Data" -recurse
 }

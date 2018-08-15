@@ -6,5 +6,10 @@
       <LDF>MoviesDB_log.ldf</LDF>
       <DB_Name>MoviesDB</DB_Name>
     </Database>
+    <Database>
+      <MDF>aspnetdb.mdf</MDF>
+      <LDF>aspnetdb_log.ldf</LDF>
+      <DB_Name>aspnetdb</DB_Name>
+    </Database>
   </Databases>
 </SQL>
