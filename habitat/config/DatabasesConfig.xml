@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<SQL>
+  <Databases>
+    <Database>
+      <MDF>MoviesDB.mdf</MDF>
+      <LDF>MoviesDB_log.ldf</LDF>
+      <DB_Name>MoviesDB</DB_Name>
+    </Database>
+  </Databases>
+</SQL>

@@ -4,3 +4,85 @@ New-Item -Name www -ItemType Directory
 New-Item -Name MovieApp -ItemType Junction -target "{{pkg.path}}/MovieApp" | Out-Null
 cd MovieApp
 New-Item -Name Web.config -ItemType SymbolicLink -target "{{pkg.svc_config_path}}/Web.config" -Force | Out-Null
+
+Invoke-Command -ComputerName localhost -EnableNetworkAccess {
+    Set-Location {{pkg.svc_path}}/MovieApp
+
+    # Load configuration XML file.
+    [xml]$config = Get-Content "{{pkg.svc_config_path}}/DatabasesConfig.xml"
+
+    $sqlIp = "{{bind.database.first.sys.ip}}"
+    $sqlInstance = "{{bind.database.first.cfg.instance}}"
+    $server = "$sqlIp\\$sqlInstance,{{bind.database.first.cfg.port}}"
+    Write-Host $server
+
+   # Add-Type -Path "C:\Users\azureadmin\.nuget\packages\system.data.sqlclient\4.4.2\lib\netstandard1.2\System.Data.SqlClient.dll"
+    Add-Type -Path "C:\Users\azureadmin\.nuget\packages\microsoft.sqlserver.sqlmanagementobjects\140.17279.0\lib\net40\Microsoft.SqlServer.Smo.dll" -ReferencedAssemblies "System.Data.SqlClient.dll"
+    $smo = New-Object Microsoft.SqlServer.Management.Smo.Server $server
+
+    try {
+        $smo.ConnectionContext.Connect()
+    } catch {
+        try {
+            $smo.ConnectionContext.LoginSecure = $false
+            $smo.ConnectionContext.Login = "sa"
+            $smo.ConnectionContext.Password = 'Pass@word1'
+            $smo.ConnectionContext.Connect()
+        } catch {
+            Write-Host "Can't connect to data source=$sqlIp\\$sqlInstance,{{bind.database.first.cfg.port}} as $(whoami)" -ForegroundColor Red
+            Write-Host "Can't connect to data source=$sqlIp\\$sqlInstance,{{bind.database.first.cfg.port}} with {{bind.database.first.cfg.username}}:{{bind.database.first.cfg.password}}" -ForegroundColor Red
+            return
+        }
+    }
+
+    ForEach ($database in $config.SQL.Databases.Database)
+    {
+        $mdfFilename = "./App_Data/$($database.MDF)" | Resolve-Path
+        $ldfFilename = "./App_Data/$($database.LDF)" | Resolve-Path
+        $DBName = $database.DB_Name
+
+        Set-ItemProperty $mdfFilename -name IsReadOnly -value $false
+        Set-ItemProperty $ldfFilename -name IsReadOnly -value $false
+
+        Write-Host $mdfFilename
+        Write-Host $ldfFilename
+
+        $files = New-Object System.Collections.Specialized.StringCollection
+        $files.Add($mdfFilename) | Out-Null
+        $files.Add($ldfFilename) | Out-Null
+
+            #Set ACL on database files for loading
+    $rule=new-object System.Security.AccessControl.FileSystemAccessRule ("BUILTIN\Users","FullControl","Allow")            
+
+    foreach ($File in $files) {            
+        if (Test-Path $File) {            
+            try {            
+                $acl = Get-ACL -Path $File -ErrorAction stop            
+                $acl.SetAccessRule($rule)            
+                Set-ACL -Path $File -ACLObject $acl -ErrorAction stop            
+                Write-Host "Successfully set permissions on $File"            
+            }
+            catch {            
+                Write-Warning "$File : Failed to set perms. Details : $_"            
+                Continue            
+            }            
+        }
+        else {            
+            Write-Warning "$File : No such file found"            
+            Continue            
+        }            
+    }  
+
+        try
+        {
+            Write-Host "Attaching $DBName... " -NoNewline
+            $smo.AttachDatabase($DBName, $files, '{{bind.database.first.cfg.username}}')
+            Write-Host "DONE" -ForegroundColor Green
+        } 
+        catch [Exception]
+        {
+            Write-Host "FAILED" -ForegroundColor Red
+            echo $_.Exception|format-list -force
+        }
+    }
+}
