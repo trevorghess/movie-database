@@ -8,6 +8,7 @@ New-Item -Name Web.config -ItemType SymbolicLink -target "{{pkg.svc_config_path}
 Invoke-Command -ComputerName localhost -EnableNetworkAccess {
     Set-Location {{pkg.svc_path}}/MovieApp
     
+    Install-Module SqlServer -AllowClobber -Force
     Import-Module SqlServer -DisableNameChecking
 
     # Load configuration XML file.
