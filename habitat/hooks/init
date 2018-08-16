@@ -7,6 +7,12 @@ New-Item -Name Web.config -ItemType SymbolicLink -target "{{pkg.svc_config_path}
 
 Invoke-Command -ComputerName localhost -EnableNetworkAccess {
     Set-Location {{pkg.svc_path}}/MovieApp
+
+    Write-Host "Checking for nuget package provider..."
+    if(!(Get-PackageProvider -Name nuget -ErrorAction SilentlyContinue -ListAvailable)) {
+        Write-Host "Installing Nuget provider..."
+        Install-PackageProvider -Name NuGet -Force | Out-Null
+    }
     
     Install-Module SqlServer -AllowClobber -Force
     Import-Module SqlServer -DisableNameChecking
