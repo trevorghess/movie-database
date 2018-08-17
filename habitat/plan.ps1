@@ -28,13 +28,14 @@ $pkg_binds=@{
 # $pkg_upstream_url="http://example.com/project-name"
 
 function Invoke-Build{
-    cp -r $PLAN_CONTEXT/.. $HAB_CACHE_SRC_PATH/$pkg_dirname
-    cd ${HAB_CACHE_SRC_PATH}/${pkg_dirname}
+
+    cp -r $PLAN_CONTEXT/../aspnetdb.mdf $HAB_CACHE_SRC_PATH\$pkg_dirname\MovieApp\MovieApp\App_Data
+    cp -r $PLAN_CONTEXT/../aspnetdb_log.ldf $HAB_CACHE_SRC_PATH\$pkg_dirname\MovieApp\MovieApp\App_Data
     
     Import-Module "$(Get-HabPackagePath dsc-core)/Modules/DscCore"
     Start-DscCore $PLAN_CONTEXT\config\enable-net35.ps1 EnableNet35
 
-    $csprojPath = "$HAB_CACHE_SRC_PATH\$pkg_dirname\src\MovieApp\MovieApp\MovieApp.csproj"
+    $csprojPath = "$HAB_CACHE_SRC_PATH\$pkg_dirname\MovieApp\MovieApp\MovieApp.csproj"
 
     $proj = [xml](get-content $csprojPath)
     $mvcAssemblyHintPathNode = $proj.CreateElement("HintPath", "http://schemas.microsoft.com/developer/msbuild/2003")
@@ -58,14 +59,12 @@ function Invoke-Build{
 
 function Invoke-Install{
     New-Item -ItemType Directory -Path $pkg_prefix/MovieApp
-    Write-Host "$HAB_CACHE_SRC_PATH/$pkg_dirname/src/MovieApp/MovieApp/bin/"
-    Copy-Item "$HAB_CACHE_SRC_PATH/$pkg_dirname/src/MovieApp/MovieApp/App_Data" "$pkg_prefix/MovieApp" -recurse
-    Copy-Item "$HAB_CACHE_SRC_PATH/$pkg_dirname/src/MovieApp/MovieApp/Scripts" "$pkg_prefix/MovieApp" -recurse
-    Copy-Item "$HAB_CACHE_SRC_PATH/$pkg_dirname/src/MovieApp/MovieApp/Content" "$pkg_prefix/MovieApp" -recurse
-    Copy-Item "$HAB_CACHE_SRC_PATH/$pkg_dirname/src/MovieApp/MovieApp/bin/" "$pkg_prefix/MovieApp" -recurse
-    Copy-Item "$HAB_CACHE_SRC_PATH/$pkg_dirname/src/MovieApp/MovieApp/Views/" "$pkg_prefix/MovieApp" -recurse
-    Copy-Item "$HAB_CACHE_SRC_PATH/$pkg_dirname/src/MovieApp/MovieApp/Default.aspx" "$pkg_prefix/MovieApp" -recurse
-    Copy-Item "$HAB_CACHE_SRC_PATH/$pkg_dirname/src/MovieApp/MovieApp/Global.asax" "$pkg_prefix/MovieApp" -recurse
-    Copy-Item "$HAB_CACHE_SRC_PATH/$pkg_dirname/src/aspnetdb.mdf" "$pkg_prefix/MovieApp/App_Data" -recurse
-    Copy-Item "$HAB_CACHE_SRC_PATH/$pkg_dirname/src/aspnetdb_log.ldf" "$pkg_prefix/MovieApp/App_Data" -recurse
+    Write-Host "$HAB_CACHE_SRC_PATH/$pkg_dirname/MovieApp/MovieApp/bin/"
+    Copy-Item "$HAB_CACHE_SRC_PATH/$pkg_dirname/MovieApp/MovieApp/App_Data" "$pkg_prefix/MovieApp" -recurse
+    Copy-Item "$HAB_CACHE_SRC_PATH/$pkg_dirname/MovieApp/MovieApp/Scripts" "$pkg_prefix/MovieApp" -recurse
+    Copy-Item "$HAB_CACHE_SRC_PATH/$pkg_dirname/MovieApp/MovieApp/Content" "$pkg_prefix/MovieApp" -recurse
+    Copy-Item "$HAB_CACHE_SRC_PATH/$pkg_dirname/MovieApp/MovieApp/bin/" "$pkg_prefix/MovieApp" -recurse
+    Copy-Item "$HAB_CACHE_SRC_PATH/$pkg_dirname/MovieApp/MovieApp/Views/" "$pkg_prefix/MovieApp" -recurse
+    Copy-Item "$HAB_CACHE_SRC_PATH/$pkg_dirname/MovieApp/MovieApp/Default.aspx" "$pkg_prefix/MovieApp" -recurse
+    Copy-Item "$HAB_CACHE_SRC_PATH/$pkg_dirname/MovieApp/MovieApp/Global.asax" "$pkg_prefix/MovieApp" -recurse
 }

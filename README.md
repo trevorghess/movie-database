@@ -17,7 +17,7 @@ choco install googlechrome -y
 
 Close and reopen your Powershell console to refresh the changed `PATH`.
 
-Navigate to `c:\`. The SQL Server installer can fail if the install path is too long. Entering into a local studio at `c:\users\administrators\sqlwebadmin` will result in a much longer install path than entering from `c:\sqlwebadmin`. Clone this repo and `cd` into the top level directory:
+Navigate to `c:\`. The SQL Server installer can fail if the install path is too long. Entering into a local studio at `c:\users\administrators\movie-database` will result in a much longer install path than entering from `c:\movie-database`. Clone this repo and `cd` into the top level directory:
 
 ```
 cd c:\
@@ -45,7 +45,7 @@ In the second PowerShell instance, load the core/sqlserver package, make sure to
 hab svc load core/sqlserver
 ```
 
-This will take several minutes to load since it is downloading and installing the .Net 2.0 runtime and installing SQL Server 2005. While its loading, build this plan in a third PowerShell Administrator instance:
+This will take several minutes to load since it is downloading and installing the .Net 2.0 runtime and installing SQL Server. While its loading, build this plan in a third PowerShell Administrator instance:
 
 ```
 cd C:\movie-database
@@ -63,11 +63,10 @@ Now install your built package in the second PowerShell terminal that we launche
 ```
 hab pkg install C:\movie-database\habitat\results\<your_package.hart>
 ```
-
 Now load `<your_origin>/movie-database`:
 
 ```
-hab svc load <your_origin>/movie-database --bind database:sqlserver2005.default
+hab svc load <your_origin>/movie-database --bind database:sqlserver.default
 ```
 
 In the Supervisor log wait for:
