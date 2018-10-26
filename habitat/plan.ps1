@@ -55,7 +55,10 @@ function Invoke-Build{
     $proj.Save($csprojPath)
     
     MSBuild.exe $csprojPath /property:Configuration=Release 
-}
+    if($LASTEXITCODE -ne 0) {
+        Write-Error "dotnet build failed!"
+    }
+  }
 
 function Invoke-Install{
     New-Item -ItemType Directory -Path $pkg_prefix/MovieApp
