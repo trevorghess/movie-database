@@ -49,7 +49,7 @@ This will take several minutes to load since it is downloading and installing th
 
 ```
 cd C:\movie-database
-hab studio enter -w
+hab studio enter
 build
 ```
 
