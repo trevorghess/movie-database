@@ -7,7 +7,7 @@ $pkg_source="http://download.microsoft.com/download/7/2/8/728F8794-E59A-4D18-9A5
 # $pkg_filename="$pkg_name-$pkg_version.zip"
 $pkg_shasum="93bb6654357446cd443d75562949ad62194bac07a589b22cd95f2223292c61d0"
 $pkg_deps=@("core/dsc-core")
-$pkg_build_deps=@("core/visual-build-tools-2017", "core/dsc-core", 'core/aspnet-mvc1')
+$pkg_build_deps=@("core/visual-build-tools-2017", "core/dsc-core", 'core/aspnet-mvc1', "core/nuget")
 # $pkg_lib_dirs=@("lib")
 # $pkg_include_dirs=@("include")
 # $pkg_bin_dirs=@("bin")
@@ -48,12 +48,13 @@ function Invoke-Build{
     }
     $proj.GetElementsByTagName("Import") | foreach {
         if($_.Project -eq '$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v9.0\WebApplications\Microsoft.WebApplication.targets'){
-            $_.Project = '$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v15.0\WebApplications\Microsoft.WebApplication.targets'
+            $_.Project = "$HAB_CACHE_SRC_PATH\$pkg_dirname\MSBuild.Microsoft.VisualStudio.Web.targets.14.0.0.3\tools\VSToolsPath\\WebApplications\Microsoft.WebApplication.targets"
         }
         
     }
     $proj.Save($csprojPath)
     
+    nuget install MSBuild.Microsoft.VisualStudio.Web.targets -Version 14.0.0.3 -OutputDirectory $HAB_CACHE_SRC_PATH/$pkg_dirname/
     MSBuild.exe $csprojPath /property:Configuration=Release 
     if($LASTEXITCODE -ne 0) {
         Write-Error "dotnet build failed!"
